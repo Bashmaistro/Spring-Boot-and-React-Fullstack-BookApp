@@ -13,13 +13,21 @@ export const SearchBookPage = () => {
     const [booksPerPage] = useState(5);
     const [totalAmountOfBooks, setTotalAmountOfBooks]= useState(0);
     const[totalPage , setTotalPages] = useState(0);
+    const[searchUrl , setSearchUrl] = useState('');  
+    const[search , setSearch] = useState('');  
 
 
     useEffect(() => {
         const fetchBook = async ()=>{
 
             const baseUrl: string = "http://localhost:8080/api/books";
-            const url: string = `${baseUrl}?page=${currentPage -1 }&size=${booksPerPage}`;
+            let url: string = ``;
+
+            if(searchUrl == ''){
+                url = `${baseUrl}?page=${currentPage -1 }&size=${booksPerPage}`; 
+            }else{
+                url = baseUrl + searchUrl;
+            }
             
             const response = await fetch(url);
 
@@ -60,7 +68,7 @@ export const SearchBookPage = () => {
             setHttpError(error.message);
         })
         window.scrollTo(0,0)
-    }, [currentPage]);
+    }, [currentPage,searchUrl]);
 
     if(isLoading){
 
@@ -73,6 +81,15 @@ export const SearchBookPage = () => {
         <div className="container m-5">
             <p>{httpError}</p>
         </div>
+    }
+
+    const searchHanleChange = () => {
+
+        if(search === ''){
+            setSearchUrl('')
+        }else {
+            setSearchUrl('/search/findByTitleContaining?title='+search+'&page=0&size='+booksPerPage)
+        }
     }
     const indexOfLastBook: number = currentPage * booksPerPage;
     const indexOfFirstBook: number = indexOfLastBook - booksPerPage;
@@ -88,8 +105,10 @@ export const SearchBookPage = () => {
                         <div className="col-6">
                             <div className="d-flex">
                                 <input className="form-control me-2" type="search"
-                                 placeholder="Search" aria-labelledby="Search"/>
-                                 <button className="btn btn-outline-success">
+                                 placeholder="Search" aria-labelledby="Search"
+                                 onChange={e => setSearch(e.target.value)}/>
+                                 <button className="btn btn-outline-success"
+                                   onClick={() => searchHanleChange()}>
                                     Search
                                  </button>
                             </div>
@@ -131,15 +150,33 @@ export const SearchBookPage = () => {
                             </div>
                         </div> 
                     </div>
+
+                    {totalAmountOfBooks > 0 ? <>
                     <div className="mt-3">
-                        <h5>Number of Result: ({totalAmountOfBooks})</h5>
+                    <h5>Number of Result: ({totalAmountOfBooks})</h5>
                     </div>
                     <p>
-                        {indexOfFirstBook +1 } to {lastItem} of {totalAmountOfBooks} items:
+                    {indexOfFirstBook +1 } to {lastItem} of {totalAmountOfBooks} items:
                     </p>
+
+                
                     {books.map(book => (
-                        <SearchBook book={book} key={book.id}/>
+                    <SearchBook book={book} key={book.id}/>
                     ))}
+                    </> : <div className="m-5">
+                        <h3>
+                            Can't find what you are looking for ?
+                        </h3>
+                        <a type="button" className="btn main-color btn-md px-4 me-md-2 fw-bold text-white"
+                        href="#">Library Services</a></div>
+                     }
+                    
+                    
+                    
+
+
+
+
                     {totalPage > 1 && 
                     <Pagination currentPage={currentPage} totalPages={totalPage} paginate={paginate}/>
                     }
