@@ -1,7 +1,8 @@
 import { ReturnBook } from "./ReturnBook";
 import { useEffect, useState } from "react";
 import BookModel from "../../../models/BookModel";
-import { error } from "console";
+
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 
 
 export const Carousel = () => {
@@ -34,6 +35,9 @@ export const Carousel = () => {
 
             const responseData =  responseJson._embedded.books;
 
+            
+            
+
             const loadedBooks: BookModel[] = [];
 
             
@@ -53,8 +57,14 @@ export const Carousel = () => {
                 });
             }
 
+            
+            
+            
+
             setBooks(loadedBooks);
             setIsLoading(false);
+            
+            
 
             
         };
@@ -65,9 +75,11 @@ export const Carousel = () => {
     }, [])
 
     if(isLoading){
-        <div className="container m-5">
-            <p>Loading...</p>
-        </div>
+
+        return (
+            <SpinnerLoading/>
+        )
+       
     }
     if (httpError) {
         <div className="container m-5">
@@ -122,7 +134,7 @@ export const Carousel = () => {
             {/* Mobile */}
             <div className='d-lg-none mt-3'>
                 <div className='row d-flex justify-content-center align-items-center'>
-                       {/* <ReturnBook book={books[4]} key={books[4].id}/> */}
+                       { <ReturnBook book={books[3]} key={"${books[3].id}"}/> }
                 </div>
             </div>
             <div className='homepage-carousel-title mt-3'>
