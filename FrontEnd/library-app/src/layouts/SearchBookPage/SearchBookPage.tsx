@@ -15,6 +15,7 @@ export const SearchBookPage = () => {
     const[totalPage , setTotalPages] = useState(0);
     const[searchUrl , setSearchUrl] = useState('');  
     const[search , setSearch] = useState('');  
+    const[categorySelection, setCategorySelection] = useState('Book Category');
 
 
     useEffect(() => {
@@ -26,7 +27,8 @@ export const SearchBookPage = () => {
             if(searchUrl == ''){
                 url = `${baseUrl}?page=${currentPage -1 }&size=${booksPerPage}`; 
             }else{
-                url = baseUrl + searchUrl;
+                let searchWithPage = searchUrl.replace('<pageNumber>' , `${currentPage - 1}` )
+                url = baseUrl + searchWithPage;
             }
             
             const response = await fetch(url);
@@ -84,12 +86,30 @@ export const SearchBookPage = () => {
     }
 
     const searchHanleChange = () => {
-
+        setCurrentPage(1);
         if(search === ''){
             setSearchUrl('')
         }else {
-            setSearchUrl('/search/findByTitleContaining?title='+search+'&page=0&size='+booksPerPage)
+            setSearchUrl('/search/findByTitleContaining?title='+search+'&page=<pageNumber>&size='+booksPerPage)
         }
+        setCategorySelection('Book category')
+    }
+
+    const categoryField = (value:string)=> {
+        setCurrentPage(1);
+            if(
+                value.toLowerCase() === 'fe' ||
+                value.toLowerCase() === 'be' ||
+                value.toLowerCase() === 'data' ||
+                value.toLowerCase() === 'devops' 
+
+            ){
+                setCategorySelection(value);
+                setSearchUrl('/search/findByCategory?category='+value+'&page=<pageNumber>&size='+booksPerPage)
+            }else{
+                setCategorySelection('All')
+                setSearchUrl('?page=<pageNumber>&size='+booksPerPage)
+            }
     }
     const indexOfLastBook: number = currentPage * booksPerPage;
     const indexOfFirstBook: number = indexOfLastBook - booksPerPage;
@@ -117,30 +137,30 @@ export const SearchBookPage = () => {
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id='dropdownMenuButton1' 
                                 data-bs-toggle='dropdown' aria-expanded='false'>
-                                Category
+                                {categorySelection}
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="drowdownMenuButton1">
-                                    <li>
+                                    <li onClick={()=>{categoryField('All')}}>
                                         <a className="droprown-item" href="#">
                                             All
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={()=>{categoryField('fe')}}>
                                         <a className="droprown-item" href="#">
                                             Front End
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={()=>{categoryField('be')}}>
                                         <a className="droprown-item" href="#">
                                             Back End
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={()=>{categoryField('data')}}>
                                         <a className="droprown-item" href="#">
                                             Data
                                         </a>
                                     </li>
-                                    <li>
+                                    <li onClick={()=>{categoryField('devops')}}>
                                         <a className="droprown-item" href="#">
                                             Devops
                                         </a>
