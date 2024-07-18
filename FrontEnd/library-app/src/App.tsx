@@ -6,6 +6,7 @@ import { Footer } from './layouts/NavbarAndFooter/Footer';
 import { Navbar } from './layouts/NavbarAndFooter/Navbar';
 
 import { SearchBookPage } from './layouts/SearchBookPage/SearchBookPage';
+import { BookCheckoutPage } from './layouts/BookCheckOutPage/BookCheckoutPage';
 
 export const App = () => {
   return (
@@ -22,6 +23,9 @@ export const App = () => {
         </Route>
         <Route path='/search' >
           <SearchBookPage/>
+        </Route>
+        <Route path='/checkout/:bookId'>
+          <BookCheckoutPage/>
         </Route>
       </Switch>
     </div>
