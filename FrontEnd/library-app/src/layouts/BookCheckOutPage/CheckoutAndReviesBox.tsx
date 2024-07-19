@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import BookModel from "../../models/BookModel";
+import { useOktaAuth } from "@okta/okta-react";
 
 export const CheckoutAndReviewBox: React.FC<{book: BookModel | undefined, mobile: boolean}> = (props) =>{
+
+    const { authState} = useOktaAuth();
 
     return(
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
@@ -31,8 +34,8 @@ export const CheckoutAndReviewBox: React.FC<{book: BookModel | undefined, mobile
                             available
                         </p>
                     </div>
-                </div>
-                <Link to='/#' className="btn btn-success btn-lg">Sign in</Link>
+                </div>{authState?.isAuthenticated ?<Link to='/#' className="btn btn-success btn-lg">Check Out</Link>: <Link to='/login' className="btn btn-success btn-lg">Sign in</Link>}
+                
                 <hr/>
                 <p className="mt-3">
                     This number can change until placing order has been complete.
