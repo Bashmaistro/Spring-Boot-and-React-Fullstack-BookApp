@@ -1,3 +1,4 @@
 01-starter-files/
 FrontEnd/library-app/src/lib/okta.config.ts
 
+BackEnd/spring-boot-library/src/main/resources/application.properties
