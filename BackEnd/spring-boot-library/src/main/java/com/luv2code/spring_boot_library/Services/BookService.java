@@ -7,6 +7,8 @@ import com.luv2code.spring_boot_library.Entity.Checkout;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -14,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@CrossOrigin(origins = "http://localhost:3000",methods = RequestMethod.GET)
 public class BookService {
 
     private BookRepository bookRepository;
