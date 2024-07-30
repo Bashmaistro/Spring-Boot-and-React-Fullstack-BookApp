@@ -28,7 +28,7 @@ public class BookController {
     }
 
     @GetMapping("/secure/ischeckedout/byuser")
-    public Boolean checkoutBookByUser(@RequestParam Long bookId ,
+    public Boolean checkoutBookByUser(@RequestParam Long bookId,
                                       @RequestHeader(value = "Authorization") String token)throws Exception {
         System.out.println(token);
         String userEmail = ExtractJWT.extractJWT(token, "\"sub\"");
