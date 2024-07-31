@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import BookModel from "../../models/BookModel";
 import { useOktaAuth } from "@okta/okta-react";
+import { LeaveReview } from "../Utils/LeaveAReview";
 
 export const CheckoutAndReviewBox: React.FC<{book: BookModel | undefined, mobile: boolean , currentLoansCount: number, isCheckedOut:boolean , isAuthenticated:any,
-    checkoutBook:any}> = (props) =>{
+    checkoutBook:any , isUserReviewLeft:boolean , submitReview: any}> = (props) =>{
 
     const { authState} = useOktaAuth();
 
@@ -28,8 +29,28 @@ export const CheckoutAndReviewBox: React.FC<{book: BookModel | undefined, mobile
         }
 
         return(
-            <Link className="btn btn-success btn-lg" to={'/login'}></Link>
+            <Link className="btn btn-success btn-lg" to={'/login'}>Sign In</Link>
         )
+    }
+
+    function reviewRender() {
+        console.log(props.isAuthenticated + "  " + props.isUserReviewLeft);
+        
+        if (props.isAuthenticated && !props.isUserReviewLeft) {
+            console.log("review birakti ve giris yapti");
+            
+            return(
+                <p><LeaveReview submitReview={props.submitReview}/></p>
+            )
+            
+        }else if(!props.isAuthenticated){
+            return (<p>Sign in to be able to leave a review.</p>)
+        }else if (props.isAuthenticated && props.isUserReviewLeft){
+            console.log("review birakmadi ve giris yapti");
+            return (
+                <p>Thank for your review</p>
+            )
+        }
     }
 
     return(
@@ -66,9 +87,7 @@ export const CheckoutAndReviewBox: React.FC<{book: BookModel | undefined, mobile
                 <p className="mt-3">
                     This number can change until placing order has been complete.
                 </p>
-                <p>
-                    Sign in to be able to leave a review.
-                </p>
+                {reviewRender()}
             </div>
         </div>
     )
